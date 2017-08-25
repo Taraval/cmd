@@ -34,10 +34,4 @@ read -p "Enter Start Range (example: 10.10.0.20): New Hostname: " newrangestart
 read -p "Enter End Range (example: 10.10.254.254): New Hostname: " newrangeend
 read -p "Enter Routers (example: 10.10.0.254)" newrouters
 
-$sh_c "cat << EOF >> /etc/dhcp/dhcpd.conf
-subnet $newsubnet netmask $newnetmask {
-  range $newrangestart $newrangeend;
-  option routers $newrouters;
-}
-EOF
-"
+
