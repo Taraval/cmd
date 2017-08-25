@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+sh_c='sh -c'
+if [ "$user" != 'root' ]; then
+  if command_exists sudo; then
+    sh_c='sudo -E sh -c'
+  elif command_exists su; then
+    sh_c='su -c'
+  else
+    cat >&2 <<-'EOF'
+    Error: this installer needs the ability to run commands as root.
+    We are unable to find either "sudo" or "su" available to make this happen.
+    EOF
+    exit 1
+  fi
+fi
+
+
+set -x
+$sh_c 'apt-get update'
+$sh_c "apt-get install -y -q isc-dhcp-server isc-dhcp-dev"
+
+$sh_c 'dpkg -l isc-dhcp-server'
+
+newsubnet='10.10.0.0'
+newnetmask='255.255.0.0'
+newrangestart='10.10.0.20'
+newrangeend='10.10.254.254'
+newrouters='10.10.0.10'
+
+read -p "Enter Subnet (example: 10.10.0.0): " newsubnet
+read -p "Enter Netmask (example: 255.255.0.0): New Hostname: " newnetmask
+read -p "Enter Start Range (example: 10.10.0.20): New Hostname: " newrangestart
+read -p "Enter End Range (example: 10.10.254.254): New Hostname: " newrangeend
+read -p "Enter Routers (example: 10.10.0.254)" newrouters
+
+$sh_c "cat << EOF >> /etc/dhcp/dhcpd.conf
+subnet $newsubnet netmask $newnetmask {
+  range $newrangestart $newrangeend;
+  option routers $newrouters;
+}
+EOF
+"
