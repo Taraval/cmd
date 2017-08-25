@@ -24,31 +24,31 @@ $sh_c 'apt-get update'
 $sh_c "apt-get install -y -q isc-dhcp-server isc-dhcp-dev"
 $sh_c 'dpkg -l isc-dhcp-server'
 
-read -p "Enter Subnet (example: 10.10.0.0): " newsubnet
+read -p "Enter Subnet (eg: 10.10.0.0): " newsubnet
 if [ -z "$newsubnet" ]
 then
   newsubnet='10.10.0.0'
 fi
 
-read -p "Enter Netmask (example: 255.255.0.0): " newnetmask
+read -p "Enter Netmask (eg: 255.255.0.0): " newnetmask
 if [ -z "$newnetmask" ]
 then
   newnetmask='255.255.0.0'
 fi
 
-read -p "Enter Start Range (example: 10.10.0.20): " newrangestart
+read -p "Enter Start Range (eg: 10.10.0.20): " newrangestart
 if [ -z "$newrangestart" ]
 then
   newrangestart='10.10.0.20'
 fi
 
-read -p "Enter End Range (example: 10.10.254.254): " newrangeend
+read -p "Enter End Range (eg: 10.10.254.254): " newrangeend
 if [ -z "$newrangeend" ]
 then
   newrangeend='10.10.254.254'
 fi
 
-read -p "Enter Routers (example: 10.10.0.254): " newrouters
+read -p "Enter Routers (eg: 10.10.0.254): " newrouters
 if [ -z "$newrouters" ]
 then
   newrouters='10.10.0.10'
@@ -64,12 +64,12 @@ EOF
 "
 ifconfig -a
 
-read -p "Enter NIC to Serve (example: enp0s8: " newnic
+read -p "Enter NIC to Serve (eg: enp0s8): " newnic
 if [ -z "$newnic" ]
 then
   newnic='10.10.0.10'
 fi
-$sh_c sed -i "s/INTERFACE.*/INTERFACE=\"$newic\"/" /etc/default/isc-dhcp-server
+$sh_c "sed -i \"s/INTERFACE.*/INTERFACE=\\\"$newnic\\\"/" /etc/default/isc-dhcp-server"
 
 echo "Restarting ISC-DHCP-SERVER Now..."
 $sh_c "service isc-dhcp-server restart"
