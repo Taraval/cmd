@@ -4,6 +4,7 @@ command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
 
+
 sh_c='sh -c'
 if [ "$user" != 'root' ]; then
   if command_exists sudo; then
@@ -21,19 +22,43 @@ fi
 set -x
 $sh_c 'apt-get update'
 $sh_c "apt-get install -y -q isc-dhcp-server isc-dhcp-dev"
-
 $sh_c 'dpkg -l isc-dhcp-server'
 
-newsubnet='10.10.0.0'
-newnetmask='255.255.0.0'
-newrangestart='10.10.0.20'
-newrangeend='10.10.254.254'
-newrouters='10.10.0.10'
-
 read -p "Enter Subnet (example: 10.10.0.0): " newsubnet
-read -p "Enter Netmask (example: 255.255.0.0): New Hostname: " newnetmask
-read -p "Enter Start Range (example: 10.10.0.20): New Hostname: " newrangestart
-read -p "Enter End Range (example: 10.10.254.254): New Hostname: " newrangeend
-read -p "Enter Routers (example: 10.10.0.254)" newrouters
+if [ -z "$newsubnet" ]
+then
+  newsubnet='10.10.0.0'
+fi
+
+read -p "Enter Netmask (example: 255.255.0.0): " newnetmask
+if [ -z "$newnetmask" ]
+then
+  newnetmask='255.255.0.0'
+fi
+
+read -p "Enter Start Range (example: 10.10.0.20): " newrangestart
+if [ -z "$newrangestart" ]
+then
+  newrangestart='10.10.0.20'
+fi
+
+read -p "Enter End Range (example: 10.10.254.254): " newrangeend
+if [ -z "$newrangeend" ]
+then
+  newrangeend='10.10.254.254'
+fi
+
+read -p "Enter Routers (example: 10.10.0.254): " newrouters
+if [ -z "$newrouters" ]
+then
+  newrouters='10.10.0.10'
+fi
 
 
+$sh_c "cat << EOF >> /etc/dhcp/dhcpd.conf
+subnet $newsubnet netmask $newnetmask {
+  range $newrangestart $newrangeend;
+  option routers $newrouters;
+}
+EOF
+"
