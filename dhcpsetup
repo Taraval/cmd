@@ -62,3 +62,17 @@ subnet $newsubnet netmask $newnetmask {
 }
 EOF
 "
+ifconfig -a
+
+read -p "Enter NIC to Serve (example: enp0s8: " newnic
+if [ -z "$newnic" ]
+then
+  newnic='10.10.0.10'
+fi
+$sh_c sed -i "s/INTERFACE.*/INTERFACE=\"$newic\"/" /etc/default/isc-dhcp-server
+
+echo "Restarting ISC-DHCP-SERVER Now..."
+$sh_c "service isc-dhcp-server restart"
+
+echo "All done!"
+
