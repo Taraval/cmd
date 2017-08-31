@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sshuttle -r $1 -l 0.0.0.0 -x $2 0/0
