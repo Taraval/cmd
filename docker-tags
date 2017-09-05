@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 #get a list of tags in a do
-curl 'https://registry.hub.docker.com/v2/repositories/library/$2/tags/' | python -mjson.tool | grep name
+curl "https://registry.hub.docker.com/v2/repositories/library/$2/tags/" | python -mjson.tool | grep name
