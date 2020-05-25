@@ -1,0 +1,26 @@
+PY_VERSION=3.8.2
+PY_DIRNAME="Python-${PY_VERSION}"
+PY_TGZ="${PY_DIRNAME}.tgz"
+
+### Check File Exist
+if [ ! -f ${PY_TGZ} ]
+then
+    wget https://www.python.org/ftp/python/${PY_VERSION}/Python-${PY_VERSION}.tgz
+fi
+
+### Check Folder Exist
+if [ ! -d ${PY_DIRNAME} ]
+then
+    tar zxvf ${PY_TGZ}
+fi
+
+### Change folders
+cd ${PY_DIRNAME}
+INSTALL_DIR="/srv/apps/python${PY_VERSION}"
+make clean
+sudo mkdir -p $INSTALL_DIR
+
+### Compile the Code
+nice -n 10 ./configure --enable-optimizations --prefix=$INSTALL_DIR
+nice -n 10 make
+#nice -n 10 sudo make install
